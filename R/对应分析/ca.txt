@@ -1,0 +1,76 @@
+##R在MASS包里提供了两个函数，corresp( )用来计算对应分析（CA，借助biplot函数作图，顺便还可以求典型相关系数），
+##mca( )用来计算多重对应分析（MCA）。但是这两个函数的功能还是很有限的。
+
+## R的贡献者们提供了几个用来处理对应分析的包。
+    先看第一个，ca package。
+
+
+#读数据
+a=read.table('data_ca.txt',header=TRUE)
+a
+chisq.test(a)
+
+##对应分析
+library(MASS)
+ca1=corresp(a,nf=2)#对应分析 
+
+###作图
+par(mar=c(4,4,3,1),cex=0.8)
+biplot(ca1)#双坐标轴图
+abline(v=0,h=0,lty=3)#添加轴线
+在图像中，相似的类会聚在一起，靠得很近，因而我们根据两种定性变量之间的距离，就可以看出两个变量的那些类相似，从而进行分组。
+
+
+#ca package。
+    ca 包用来计算并可视化简单，多重及联合对应分析。
+    ca 包的主要函数
+ ? 简单对应分析 :
+– Computation: ca()
+– Printing and Summaries: print() and summary() methods for ca objects
+– Plotting: plot.ca() and plot3d.ca()
+? 多重对应分析和联合对应分析:
+– Computation: mjca()
+– Printing and Summaries: print() and summary() methods for ca objects
+– Plotting: plot.mjca() and plot3d.mjca()
+
+数据集:
+– smoke, author and wg93
+用ca 包作简单对应分析
+    例  smoke dataset
+    这个数据集来自Greenacre （1984 ）,被应用于多个统计软件作为对应分析的说明案例数据。它的内容是一个5行（阶层）4列（吸烟习惯）的列联表，给出了一个虚构的公司内各阶层吸烟习惯的频数。
+    对它作对应分析
+ 
+library(ca)
+data("smoke")
+ca(smoke)
+#例如，行的标准坐标可以有如下语句得到
+ca(smoke)$rowcoord
+summary(ca(smoke))
+#returns the summary of the CA
+#这里给出了累积贡献率cum%，和碎石图scree plot(虽然看着有点特别)
+#行和列里边的项目给出了主坐标（k=1,k=2）,之后是相关平方cor和贡献ctr,注意该表中的数都是10的负3次。总质量qlt由解的维数给出，在这里等于两个维数上的相关平方的和。
+
+绘图：
+
+基本形式
+plot(x, dim = c(1,2), map = "symmetric", what = c("all", "all"),
+mass = c(FALSE, FALSE), contrib = c("none", "none"),
+col = c("#0000FF", "#FF0000"), pch = c(16, 1, 17, 24),
+labels = c(2, 2), arrows = c(FALSE, FALSE), ...)
+ 
+可选的图形参数
+"symmetric" (default)
+"rowprincipal"
+"colprincipal"
+"symbiplot"
+"rowgab"
+"colgab"
+"rowgreen"
+
+基本的图形
+>  plot(ca(smoke)
+行作为主坐标列作为标准坐标的情形
+>  plot(ca(smoke), mass = TRUE, contrib = "absolute",
++  map = "rowgreen", arrows = c(FALSE, TRUE))
+三维图,这个图在图形界面是可以旋转的
+> plot3d.ca(ca(smoke, nd=3))
